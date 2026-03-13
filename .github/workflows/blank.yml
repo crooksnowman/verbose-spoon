@@ -1,0 +1,21 @@
+on:
+  workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: sh f
+        env:
+          KEY: ${{ secrets.KEY }}
+      - uses: docker://atdr.meo.ws/archiveteam/grab-base
+        with:
+          entrypoint: tmpfs/run
+      - run: ./final
+        working-directory: tmpfs
+        env:
+          KEY: ${{ secrets.KEY }}
+      - uses: actions/upload-artifact@v4
+        with:
+          path: tmpfs/result
+          compression-level: 0
